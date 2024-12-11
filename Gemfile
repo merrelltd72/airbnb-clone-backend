@@ -25,6 +25,12 @@ gem "jbuilder"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.20"
 
+# Middleware that will make Rack-based apps CORS compatible. [https://rubygems.org/gems/rack-cors]
+gem "rack-cors"
+
+# A pure ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard. [https://rubygems.org/gems/jwt]
+gem "jwt"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

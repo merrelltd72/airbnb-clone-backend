@@ -14,4 +14,10 @@ Rails.application.routes.draw do
 
   # User routes
   post "/users" => "user#create"
+
+  # User logout route
+  post "sessions" => "sessions#create"
+
+  # User logout route
+  delete "/sessions" => "sessions#destroy"
 end
