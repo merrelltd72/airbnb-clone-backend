@@ -1,21 +1,34 @@
 source "https://rubygems.org"
 
+ruby "3.3.4"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails"
+gem "rails", "8.0.1"
+
+# Shim to load environment variables from .env into ENV in development. https://github.com/bkeepers/dotenv
+gem "dotenv", groups: [ :development, :test, :production ]
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
+
 # Use postgresql as the database for Active Record
-gem "pg"
+gem "pg", "~> 1.5.9"
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
+
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
+
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
@@ -30,6 +43,9 @@ gem "rack-cors"
 
 # A pure ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard. [https://rubygems.org/gems/jwt]
 gem "jwt"
+
+# A Scope & Engine based, clean, powerful, customizable and sophisticated paginator for modern web app frameworks and ORMs https://github.com/kaminari/kaminari
+gem "kaminari"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -60,4 +76,5 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "rspec-rails"
 end
