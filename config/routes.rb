@@ -15,9 +15,16 @@ Rails.application.routes.draw do
   # User routes
   post "/users" => "user#create"
 
-  # User logout route
+  # User login route
   post "sessions" => "sessions#create"
 
   # User logout route
   delete "/sessions" => "sessions#destroy"
+
+  # CRUD routes for Rooms
+  get "/rooms" => "rooms#index"
+  post "/rooms" => "rooms#create"
+  get "/rooms/:id" => "rooms#show"
+  patch "/rooms/:id" => "rooms#update"
+  delete "/rooms/:id" => "rooms#destroy"
 end
