@@ -3,7 +3,7 @@ source "https://rubygems.org"
 ruby "3.3.4"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "8.0.1"
+gem "rails", "8.0.2"
 
 # Shim to load environment variables from .env into ENV in development. https://github.com/bkeepers/dotenv
 gem "dotenv", groups: [ :development, :test, :production ]
@@ -61,7 +61,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem "brakeman", require: false
+  gem "brakeman",  require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
