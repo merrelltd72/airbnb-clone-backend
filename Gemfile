@@ -39,7 +39,7 @@ gem "jbuilder"
 gem "bcrypt", "~> 3.1.20"
 
 # Middleware that will make Rack-based apps CORS compatible. [https://rubygems.org/gems/rack-cors]
-gem "rack-cors"
+gem "rack-cors", ">= 2.0.2"
 
 # A pure ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard. [https://rubygems.org/gems/jwt]
 gem "jwt"
