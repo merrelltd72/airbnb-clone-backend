@@ -195,7 +195,7 @@ GEM
     rack (3.1.14)
     rack-cors (2.0.2)
       rack (>= 2.0.0)
-    rack-session (2.1.0)
+    rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
     rack-test (2.2.0)
@@ -350,7 +350,7 @@ DEPENDENCIES
   jwt
   kaminari
   pg (~> 1.5.9)
-  puma (>= 5.0)
+  puma (>= 6.4.3)
   rack (>= 3.1.14)
   rack-cors (>= 2.0.2)
   rails (= 8.0.2)
