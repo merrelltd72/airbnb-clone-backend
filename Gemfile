@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
 ruby "3.3.4"
@@ -36,12 +38,12 @@ gem "jbuilder"
 # gem "kredis"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-gem "bcrypt", "~> 3.1.20"
+gem "bcrypt", "~> 3.1.7"
 
 # Middleware that will make Rack-based apps CORS compatible. [https://rubygems.org/gems/rack-cors]
-gem "rack-cors", ">= 2.0.2"
+gem "rack-cors"
 
-gem "rack", ">= 3.1.14"
+gem "rack"
 
 # A pure ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard. [https://rubygems.org/gems/jwt]
 gem "jwt"
@@ -67,6 +69,12 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  gem "rspec-rails"
+  gem "rubocop"
+  gem "rubocop-capybara"
+  gem "rubocop-rails"
+  gem "rubocop-rspec"
+  gem "rubocop-rspec_rails"
 end
 
 group :development do
@@ -78,5 +86,4 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-  gem "rspec-rails"
 end
