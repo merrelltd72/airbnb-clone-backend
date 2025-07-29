@@ -122,7 +122,7 @@ GEM
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    json (2.13.1)
+    json (2.13.2)
     jwt (3.1.2)
       base64
     kaminari (1.2.2)
