@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   # User routes
-  post "/users" => "user#create"
+  post "/users" => "users#create"
 
   # User logout route
   post "sessions" => "sessions#create"
