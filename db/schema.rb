@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_12_11_011325) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_19_015630) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
+
+  create_table "room_images", force: :cascade do |t|
+    t.integer "room_id"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.string "address"
+    t.string "city"
+    t.string "state"
+    t.integer "price"
+    t.string "description"
+    t.string "home_type"
+    t.string "room_type"
+    t.integer "total_occupancy"
+    t.integer "total_bedrooms"
+    t.integer "total_bathrooms"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"

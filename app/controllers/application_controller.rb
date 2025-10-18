@@ -7,24 +7,30 @@ class ApplicationController < ActionController::Base
   # Backend user authentication helper methods
   def current_user
     token = cookies.signed[:jwt]
-    if token
+    return unless token
+
       begin
-        decoded_token = JWT.decode(
+        decoded_token = generate_jwt_token(token)
+        User.find_by(id: decoded_token[0]["user_id"])
+      rescue JWT::ExpiredSignature
+        nil
+      end
+  end
+
+  def authenticate_user
+    return if current_user
+
+    rendor json: {}, status: :unauthorized
+  end
+
+  private
+
+  def generate_jwt_token(token)
+    JWT.decode(
           token,
           Rails.application.credentials.fetch(:secret_key_base),
           true,
           { algorithm: "HS256" }
         )
-        User.find_by(id: decoded_token[0]["user_id"])
-      rescue JWT::ExpiredSignature
-        nil
-      end
-    end
-  end
-
-  def authenticate_user
-    unless current_user
-      render json: {}, status: :unauthorized
-    end
   end
 end
