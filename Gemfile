@@ -5,7 +5,7 @@ source "https://rubygems.org"
 ruby "3.3.4"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "8.0.3"
+gem "rails", "8.1.1"
 
 # Shim to load environment variables from .env into ENV in development. https://github.com/bkeepers/dotenv
 gem "dotenv", groups: [ :development, :test, :production ]
@@ -14,10 +14,10 @@ gem "dotenv", groups: [ :development, :test, :production ]
 gem "sprockets-rails"
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.6.1"
+gem "pg", "~> 1.6.2"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 6.4.3"
+gem "puma", ">= 7.1.0"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
