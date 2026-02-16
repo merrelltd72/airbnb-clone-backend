@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception, unless: -> { request.format.json? }
 
+  require_relative "controllers/concerns/authentication_concern"
+
   include AuthenticationConcerns
 
   # Backend user authentication helper methods
