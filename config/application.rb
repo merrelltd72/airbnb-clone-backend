@@ -23,6 +23,6 @@ module AirbnbCloneBackend
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-    config.autoload_paths << "#{root}/lib #{root}/app/controllers/concerns"
+    config.autoload_paths += Dir["#{config.root}/lib #{config.root}/app/controllers/concerns"]
   end
 end
