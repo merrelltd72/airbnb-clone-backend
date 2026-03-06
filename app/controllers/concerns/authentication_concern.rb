@@ -1,9 +1,9 @@
-module AuthenticationConcerns
+module AuthenticationConcern
   extend ActiveSupport::Concern
 
-  included do
-    before_action :authenticate_user!
-  end
+included do
+  before_action :authenticate_user!
+end
 
   def current_user
     token = cookies.signed[:jwt]
@@ -17,9 +17,6 @@ module AuthenticationConcerns
     end
   end
 
-  def authenticate_user
-    render json: { error: "Unauthorized" }, status: :unauthorized unless current_user
-  end
 
   def generate_jwt_token(token)
     JWT.decode(
@@ -30,5 +27,12 @@ module AuthenticationConcerns
         )
   rescue JWT::DecodeError
     nil
+  end
+
+  private
+
+
+  def authenticate_user!
+    render json: { error: "Unauthorized" }, status: :unauthorized unless current_user
   end
 end
