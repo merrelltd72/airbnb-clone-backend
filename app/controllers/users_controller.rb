@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  include AuthenticationConcern
+  skip_before_action :authenticate_user!, only: [ :create ]
 
   # Create a new user
   def create
