@@ -20,12 +20,16 @@ module AuthenticationConcern
   def decode_jwt_token(token)
     JWT.decode(
       token,
-      Rails.application.credentials.fetch(:secret_key_base),
+      jwt_secret_key,
       true,
       { algorithm: "HS256" }
     )
   rescue JWT::DecodeError
     nil
+  end
+
+  def jwt_secret_key
+    Rails.application.credentials[:secret_key_base] || Rails.application.secret_key_base
   end
 
   def authenticate_user!
