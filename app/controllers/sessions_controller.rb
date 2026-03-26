@@ -20,17 +20,4 @@ class SessionsController < ApplicationController
     cookies.delete(:jwt)
     render json: { message: "Logged out successfully" }
   end
-
-  private
-
-  def generate_jwt_token(user)
-    JWT.encode(
-        {
-          user_id: user.id, # the data to encode
-          exp: 24.hours.from_now.to_i # the expiration time
-        },
-        jwt_secret_key, # the secret key
-        "HS256" # the encryption algorithm
-      )
-  end
 end
