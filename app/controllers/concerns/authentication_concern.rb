@@ -2,6 +2,7 @@ module AuthenticationConcern
   extend ActiveSupport::Concern
 
   included do
+    include JwtTokenConcern
     before_action :authenticate_user!
   end
 
@@ -16,21 +17,6 @@ module AuthenticationConcern
   end
 
   private
-
-  def decode_jwt_token(token)
-    JWT.decode(
-      token,
-      jwt_secret_key,
-      true,
-      { algorithm: "HS256" }
-    )
-  rescue JWT::DecodeError
-    nil
-  end
-
-  def jwt_secret_key
-    Rails.application.credentials[:secret_key_base] || Rails.application.secret_key_base
-  end
 
   def authenticate_user!
     render json: { error: "Unauthorized" }, status: :unauthorized unless current_user
