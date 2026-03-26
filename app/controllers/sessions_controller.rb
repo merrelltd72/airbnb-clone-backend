@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  include JwtTokenConcern
+
   skip_before_action :authenticate_user!, only: [ :create, :destroy ]
 
   # Create user login session
@@ -30,9 +32,5 @@ class SessionsController < ApplicationController
         jwt_secret_key, # the secret key
         "HS256" # the encryption algorithm
       )
-  end
-
-  def jwt_secret_key
-    Rails.application.credentials[:secret_key_base] || Rails.application.secret_key_base
   end
 end
