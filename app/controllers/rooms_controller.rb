@@ -15,10 +15,13 @@ class RoomsController < ApplicationController
   end
 
   def show
+    return render json: { error: "Room not found" }, status: :not_found unless @room
     render json: @room
   end
 
   def update
+    return render json: { error: "Room not found" }, status: :not_found unless @room
+
     if @room.update(room_params)
       render json: @room
     else
@@ -27,6 +30,8 @@ class RoomsController < ApplicationController
   end
 
   def destroy
+    return render json: { error: "Room not found" }, status: :not_found unless @room
+
     @room.destroy
     render json: { message: "Room successfully deleted" }
   end
