@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   # User routes
   post "/users" => "users#create"
+  post "/signup" => "users#create"
+  post "/register" => "users#create"
 
   # User login route
   post "sessions" => "sessions#create"
