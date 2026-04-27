@@ -5,9 +5,14 @@ class UsersController < ApplicationController
   def create
     user = create_new_user(params)
     if user.save
-      render json: { message: "User created successfully" }, status: :created
+      render json: { id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      created_at: user.created_at }, status: :created
     else
-      render json: { errors: user.errors.full_messages }, status: :bad_request
+      status_code = user.errors.added?(:email, :taken) ? :conflict : :unprocessable_entity
+      render json: { errors: user.errors.full_messages }, status: status_code
     end
   end
 
