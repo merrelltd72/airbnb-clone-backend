@@ -15,7 +15,11 @@ Rails.application.routes.draw do
   # User routes
   post "/users" => "users#create"
   post "/signup" => "users#create"
-  post "/register" => "users#create"
+
+  # Profile routes
+  get "/me" => "users#me"
+  patch "/me" => "users#update_me"
+  patch "/me/password" => "users#update_password"
 
   # User login route
   post "sessions" => "sessions#create"
