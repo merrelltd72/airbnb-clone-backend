@@ -21,6 +21,10 @@ Rails.application.routes.draw do
   patch "/me" => "users#update_me"
   patch "/me/password" => "users#update_password"
 
+  # Password reset routes
+  post "/password/forgot" => "passwords#forgot"
+  post "/password/reset" => "passwords#reset"
+
   # User login route
   post "sessions" => "sessions#create"
 
