@@ -6,11 +6,27 @@ class SessionsController < ApplicationController
   # Create user login session
   def create
     user = User.find_by(email: params[:email].to_s.strip.downcase)
-    if user&.authenticate(params[:password])
+
+    return render json: {}, status: :unauthorized unless user
+
+    if user.locked?
+      return render json: { error: "Account is locked. Please contact support." }, status: :locked
+    end
+
+    if user.authenticate(params[:password])
+      user.record_login!
+
       jwt = generate_jwt_token(user)
       cookies.signed[:jwt] = jwt_cookie_options.merge(value: jwt)
-      render json: { email: user.email, user_id: user.id }, status: :ok
+
+      render json: {
+        id: user.id,
+        email: user.email,
+        role: user.role
+      }, status: :ok
     else
+      user.record_failed_attempt!
+
       render json: {}, status: :unauthorized
     end
   end
