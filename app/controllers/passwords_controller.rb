@@ -7,7 +7,7 @@ class PasswordsController < ApplicationController
     user = User.where("Lower(email) = ?", email).first
 
     if user
-      raw_token = user.generate_password_reset_token!
+      raw_token = user.generate_reset_password_token!
       PasswordResetMailer.with(user:, raw_token:).password_reset.deliver_later
     end
 
