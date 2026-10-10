@@ -185,4 +185,48 @@ RSpec.describe User, type: :model do
       expect(described_class.find_by_reset_password_token(raw_token)).to be_nil
     end
   end
+
+  describe "#reset_password" do
+    it "changes the password, clears the token, and unlocks the account" do
+      user = described_class.create!(
+        valid_attributes.merge(
+          email: "reset6@example.com",
+          failed_attempts: described_class::MAX_FAILED_ATTEMPTS,
+          locked_at: Time.current
+        )
+      )
+      user.generate_reset_password_token!
+
+      expect(user.reset_password(new_password: "NewPass123!", new_password_confirmation: "NewPass123!")).to be(true)
+      user.reload
+
+      expect(user.authenticate("NewPass123!")).to be_truthy
+      expect(user.reset_password_token_digest).to be_nil
+      expect(user.reset_password_sent_at).to be_nil
+      expect(user.failed_attempts).to eq(0)
+      expect(user.locked_at).to be_nil
+    end
+
+    it "returns false and leaves the token and lock in place when confirmation does not match" do
+      user = described_class.create!(valid_attributes.merge(email: "reset7@example.com", locked_at: Time.current))
+      user.generate_reset_password_token!
+
+      expect(user.reset_password(new_password: "NewPass123!", new_password_confirmation: "nope")).to be(false)
+      user.reload
+
+      expect(user.authenticate("Password123!")).to be_truthy
+      expect(user.reset_password_token_digest).to be_present
+      expect(user.locked_at).to be_present
+    end
+
+    it "rejects a blank password without consuming the token" do
+      user = described_class.create!(valid_attributes.merge(email: "reset8@example.com"))
+      user.generate_reset_password_token!
+      reloaded = described_class.find(user.id)
+
+      expect(reloaded.reset_password(new_password: "", new_password_confirmation: "")).to be(false)
+      expect(reloaded.errors[:password]).to include("can't be blank")
+      expect(reloaded.reload.reset_password_token_digest).to be_present
+    end
+  end
 end

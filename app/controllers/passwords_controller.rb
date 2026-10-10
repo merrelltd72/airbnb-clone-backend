@@ -8,7 +8,7 @@ class PasswordsController < ApplicationController
 
     if user
       raw_token = user.generate_reset_password_token!
-      PasswordResetMailer.with(user:, raw_token:).password_reset.deliver_later
+      PasswordResetMailer.with(user:, token: raw_token).password_reset.deliver_later
     end
 
     render json: { message: "If the email exists, reset instructions have been sent." }, status: :ok
@@ -21,14 +21,13 @@ class PasswordsController < ApplicationController
 
     return render json: { error: "Invalid or expired token" }, status: :bad_request unless user
 
-    if user.update(
-      password: pr[:new_password],
-      password_confirmation: pr[:new_password_confirmation]
-      )
-      user.clear_password_reset_token!
+    if user.reset_password(
+      new_password: pr[:new_password],
+      new_password_confirmation: pr[:new_password_confirmation]
+    )
       render json: { message: "Password has been reset successfully." }, status: :ok
     else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_content
     end
   end
 

@@ -50,6 +50,22 @@ class User < ApplicationRecord
     )
   end
 
+  def reset_password(new_password:, new_password_confirmation:)
+    if new_password.blank?
+      errors.add(:password, :blank)
+      return false
+    end
+
+    update(
+      password: new_password,
+      password_confirmation: new_password_confirmation,
+      reset_password_token_digest: nil,
+      reset_password_sent_at: nil,
+      failed_attempts: 0,
+      locked_at: nil
+    )
+  end
+
   def password_reset_token_valid?
     reset_password_sent_at.present? && reset_password_sent_at >= RESET_PASSWORD_TOKEN_TTL.ago
   end
