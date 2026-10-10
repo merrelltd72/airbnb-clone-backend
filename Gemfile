@@ -5,7 +5,7 @@ source "https://rubygems.org"
 ruby "3.3.4"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "8.1.3"
+gem "rails", "8.1.4"
 
 # Shim to load environment variables from .env into ENV in development. https://github.com/bkeepers/dotenv
 gem "dotenv", groups: [ :development, :test, :production ]
@@ -70,6 +70,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
   gem "rspec-rails"
+  gem "factory_bot_rails"
   gem "rubocop"
   gem "rubocop-capybara"
   gem "rubocop-rails"
