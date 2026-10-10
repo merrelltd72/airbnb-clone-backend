@@ -1,4 +1,5 @@
-require 'rails_helper'
+# spec/requests/passwords_spec.rb
+require "rails_helper"
 
 RSpec.describe "Passwords", type: :request do
   describe "POST /password/forgot" do

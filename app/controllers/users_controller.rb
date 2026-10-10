@@ -11,7 +11,7 @@ class UsersController < ApplicationController
       role: user.role,
       created_at: user.created_at }, status: :created
     else
-      status_code = user.errors.added?(:email, :taken) ? :conflict : :unprocessable_entity
+      status_code = user.errors.of_kind?(:email, :taken) ? :conflict : :unprocessable_content
       render json: { errors: user.errors.full_messages }, status: status_code
     end
   end
