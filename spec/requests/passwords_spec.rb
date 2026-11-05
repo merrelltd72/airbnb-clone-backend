@@ -11,6 +11,15 @@ RSpec.describe "Passwords", type: :request do
         "message" => "If the email exists, reset instructions have been sent."
       )
     end
+
+    it "finds the user when the email is sent with different casing and whitespace" do
+      user = create(:user, email: "ada@example.com")
+
+      post "/password/forgot", params: { email: "  ADA@Example.com " }, as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(user.reload.reset_password_token_digest).to be_present
+    end
   end
 
   describe "POST /password/reset" do

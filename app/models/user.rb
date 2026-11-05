@@ -4,16 +4,22 @@ class User < ApplicationRecord
   has_secure_password
 
   enum :role, { guest: 0, host: 1, maintainer: 2 }, prefix: true
+  normalizes :email, with: ->(email) { email.strip.downcase }
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :name, presence: true
   validates :role, presence: true
 
   MAX_FAILED_ATTEMPTS = 5
+  LOCK_DURATION = 15.minutes
   RESET_PASSWORD_TOKEN_TTL = 30.minutes
 
   def locked?
-    locked_at.present? && locked_at > 15.minutes.ago
+    locked_at.present? && locked_at > LOCK_DURATION.ago
+  end
+
+  def lock_expired?
+    locked_at.present? && !locked?
   end
 
   def lock_account!
@@ -25,12 +31,16 @@ class User < ApplicationRecord
   end
 
   def record_failed_attempt!
+    # Start a fresh count once an old lock has expired; otherwise the stale count
+    # (already at MAX_FAILED_ATTEMPTS) would re-lock on the first wrong password.
+    unlock_account! if lock_expired?
+
     increment!(:failed_attempts)
     lock_account! if failed_attempts >= MAX_FAILED_ATTEMPTS
   end
 
   def record_login!
-    update_columns(last_login_at: Time.current, failed_attempts: 0)
+    update_columns(last_login_at: Time.current, failed_attempts: 0, locked_at: nil)
   end
 
   def generate_reset_password_token!
