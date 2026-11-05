@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
 
   # Create user login session
   def create
-    user = User.find_by(email: params[:email].to_s.strip.downcase)
+    user = User.find_by(email: params[:email].to_s)
 
     return render json: {}, status: :unauthorized unless user
 

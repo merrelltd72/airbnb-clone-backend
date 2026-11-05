@@ -48,6 +48,38 @@ RSpec.describe "Sessions", type: :request do
       expect(response).to have_http_status(:locked)
     end
 
+
+    it "logs in when the email is sent with different casing and whitespace" do
+      post "/sessions",
+           params: { email: "  LOGIN@Example.com ", password: "Password123!" }.to_json,
+           headers: json_headers
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["id"]).to eq(user.id)
+    end
+
+    it "does not re-lock on the first wrong password after a lock expires" do
+      user.update_columns(
+        failed_attempts: User::MAX_FAILED_ATTEMPTS,
+        locked_at: (User::LOCK_DURATION + 1.minute).ago
+      )
+
+      post "/sessions",
+           params: { email: user.email, password: "wrong-pass" }.to_json,
+           headers: json_headers
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(user.reload).not_to be_locked
+      expect(user.failed_attempts).to eq(1)
+
+      post "/sessions",
+           params: { email: user.email, password: "Password123!" }.to_json,
+           headers: json_headers
+
+      expect(response).to have_http_status(:ok)
+    end
+
+
     it "increments failed attempts on invalid login" do
       expect do
         post "/sessions",

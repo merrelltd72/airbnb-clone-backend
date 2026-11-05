@@ -44,6 +44,35 @@ RSpec.describe "Users", type: :request do
       expect(response).to have_http_status(:conflict)
     end
 
+    it "always creates a guest, ignoring any role param" do
+      %w[host maintainer].each_with_index do |role, i|
+        post "/signup",
+             params: valid_params.merge(email: "role#{i}@example.com", role: role).to_json,
+             headers: json_headers
+
+        expect(response).to have_http_status(:created)
+        expect(response.parsed_body["role"]).to eq("guest")
+        expect(User.find(response.parsed_body["id"])).to be_role_guest
+      end
+    end
+
+    it "stores the email normalized" do
+      post "/signup", params: valid_params.merge(email: "  New.User@Example.COM ").to_json, headers: json_headers
+
+      expect(response).to have_http_status(:created)
+      expect(response.parsed_body["email"]).to eq("new.user@example.com")
+    end
+
+    it "returns conflict for a duplicate email with different casing" do
+      User.create!(valid_params)
+
+      post "/signup", params: valid_params.merge(email: "TEST@Example.com").to_json, headers: json_headers
+
+      expect(response).to have_http_status(:conflict)
+    end
+
+
+
     it "returns unprocessable_entity for invalid payload" do
       post "/signup",
            params: { name: "", email: "", password: "x", password_confirmation: "y" }.to_json,
