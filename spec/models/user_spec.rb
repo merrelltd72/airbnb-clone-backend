@@ -37,6 +37,80 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "email normalization" do
+    it "strips and downcases email on assignment" do
+      user = described_class.new(valid_attributes.merge(email: " Mixed.Case@Example.COM "))
+      expect(user.email).to eq("mixed.case@example.com")
+    end
+
+    it "matches finder lookups regardless of case or surrounding whitespace" do
+      user = described_class.create!(valid_attributes.merge(email: "Finder@Example.com"))
+      expect(described_class.find_by(email: "  FINDER@example.COM ")).to eq(user)
+    end
+
+    it "treats differently-cased emails as duplicates" do
+      described_class.create!(valid_attributes)
+
+      user = described_class.new(valid_attributes.merge(email: " Test@Example.com "))
+      expect(user).not_to be_valid
+      expect(user.errors.of_kind?(:email, :taken)).to be(true)
+    end
+  end
+
+  describe "lock expiry" do
+    def expired_lock_user(email)
+      described_class.create!(
+        valid_attributes.merge(
+          email: email,
+          failed_attempts: described_class::MAX_FAILED_ATTEMPTS,
+          locked_at: (described_class::LOCK_DURATION + 1.minute).ago
+        )
+      )
+    end
+
+    it "starts a fresh failed-attempt count once the lock has expired" do
+      user = expired_lock_user("expired-lock1@example.com")
+
+      user.record_failed_attempt!
+      user.reload
+
+      expect(user.failed_attempts).to eq(1)
+      expect(user.locked_at).to be_nil
+      expect(user).not_to be_locked
+    end
+
+    it "does not reset the count while the lock is still active" do
+      user = described_class.create!(
+        valid_attributes.merge(
+          email: "active-lock@example.com",
+          failed_attempts: described_class::MAX_FAILED_ATTEMPTS,
+          locked_at: 1.minute.ago
+        )
+      )
+
+      expect(user.lock_expired?).to be(false)
+      expect(user).to be_locked
+    end
+
+    it "re-locks after MAX_FAILED_ATTEMPTS new failures following an expired lock" do
+      user = expired_lock_user("expired-lock2@example.com")
+
+      described_class::MAX_FAILED_ATTEMPTS.times { user.record_failed_attempt! }
+
+      expect(user.reload).to be_locked
+    end
+
+    it "clears an expired lock on successful login" do
+      user = expired_lock_user("expired-lock3@example.com")
+
+      user.record_login!
+      user.reload
+
+      expect(user.locked_at).to be_nil
+      expect(user.failed_attempts).to eq(0)
+    end
+  end
+
   describe "role enum" do
     it "defaults to guest" do
       user = described_class.create!(valid_attributes)

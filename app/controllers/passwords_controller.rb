@@ -3,8 +3,7 @@ class PasswordsController < ApplicationController
 
   # POST /password/forgot
   def forgot
-    email = params[:email].to_s.downcase.strip
-    user = User.where("Lower(email) = ?", email).first
+    user = User.find_by(email: params[:email].to_s)
 
     if user
       raw_token = user.generate_reset_password_token!
